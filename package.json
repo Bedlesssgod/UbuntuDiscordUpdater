@@ -1,0 +1,21 @@
+{
+  "name": "updater",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^14.0.5",
+    "ts-node": "8.10.1",
+    "typescript": "^3.9.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.3"
+  }
+}
