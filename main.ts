@@ -88,16 +88,7 @@ function loadFile() {
 
 async function runNormal() {
     console.log("--------DISCORD UPDATER--------")
-    let data: string;
-    try {
-        data = fs.readFileSync(`/home/${process.env.USER}/.config/discord/Local State`, 'utf8');
-    } catch (err) {
-        console.log("Error reading file: " + err);
-        console.log("--------DISCORD UPDATER--------")
-        return;
-    }
-    let obj: DiscordLocalState = JSON.parse(data);
-    let ver = obj.updateclientdata.apps.oimompecagnajdejgnnjijobebaeigek.fp == undefined ? "undefined" : obj.updateclientdata.apps.oimompecagnajdejgnnjijobebaeigek.fp.substring(2, 4);
+    let ver = await getNextWebVersion() + "";
     if(!fs.existsSync(process.env.HOME + "/discordUpdater/discord-0.0." + ver + ".deb")) {
         console.log("-Getting new Version: " + ver)
         const re = await util.fetchFile((discordLink.replace("%s", ver).replace("%s", ver)), process.env.HOME + "/discordUpdater", `discord-0.0.${ver}.deb`);
@@ -199,8 +190,33 @@ async function runManual(ver : string) {
     }
 }
 
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
+async function getCurrentVersion() {
+    let data : string[];
+    try {
+        data = fs.readdirSync(`/home/${process.env.USER}/.config/discord/`, 'utf8');
+    } catch (err) {
+        console.log("Error listing dir: " + err);
+        return;
+    }
+    let outputData : string;
+    data.forEach((value) => {
+        let containedDots : number;
+        if(value.startsWith("0")) {
+            containedDots = value.split(".").length;
+            if(containedDots == 3) {
+                outputData = value;
+            }
+        }
     });
+    return outputData;
+}
+
+async function getCurrentWebVersion() {
+    const ver = await getCurrentVersion();
+    return Number.parseInt(ver.substring(4, 6));
+}
+
+async function getNextWebVersion() {
+    const ver = await getCurrentWebVersion();
+    return ver + 1;
 }
